@@ -144,6 +144,7 @@ class CodeTemplator(MarkdownTemplator):
         super().__init__(output_dir)
         self.add_filter('enumify', self._enumify)
         self.add_filter('privatize', self._privatize)
+        self.add_filter('doxygenify', self._doxygenify)
 
     @staticmethod
     def _enumify(s: str):
@@ -154,3 +155,12 @@ class CodeTemplator(MarkdownTemplator):
     @classmethod
     def _privatize(cls, s: str):
         return cls._add_leading_underscore(stringcase.camelcase(s))
+
+    @classmethod
+    def _doxygenify(s: str):
+        """ Translates a markdown string for use as a doxygen description.
+        """
+        if "```plantuml" in s:
+            plantuml_replace = re.compile(r"```plantuml\n(.*)```", re.DOTALL|re.MULTILINE)
+            return plantuml_replace.sub(r"\\startuml\n\1\\enduml", s)
+        return s
