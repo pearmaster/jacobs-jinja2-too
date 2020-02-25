@@ -5,7 +5,7 @@ A simple wrapper around Jinja2 templatung with a collection of custom filters.
 ## Installation
 
 ```sh
-pip3 install jacobs-jinja-Too
+pip3 install jacobs-jinja-too
 ```
 
 ## Example Usage
