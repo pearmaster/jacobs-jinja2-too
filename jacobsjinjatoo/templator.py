@@ -2,7 +2,8 @@ import os
 import jinja2
 import stringcase
 import re
-
+from . import stringmanip
+from .filewriter import WriteIfChangedFile
 
 class Templator(object):
 
@@ -38,10 +39,6 @@ class Templator(object):
         return self
 
     @staticmethod
-    def _upper_camel_case(s: str):
-        return stringcase.pascalcase(stringcase.snakecase(s)).replace('_', '')
-
-    @staticmethod
     def _add_leading_underscore(s: str):
         if s and s is not None and s != 'None' and len(s) > 0:
             return "_%s" % (s)
@@ -65,8 +62,8 @@ class Templator(object):
         if force or self._jinja2_environment is None:
             loader = jinja2.ChoiceLoader(self.loaders)
             env = jinja2.Environment(loader=loader)
-            env.filters['UpperCamelCase'] = self._upper_camel_case
-            env.filters['PascalCase'] = self._upper_camel_case
+            env.filters['UpperCamelCase'] = stringmanip.upper_camel_case
+            env.filters['PascalCase'] = stringmanip.upper_camel_case
             env.filters['CONST_CASE'] = lambda s : stringcase.constcase(str(s))
             env.filters['snake_case'] = stringcase.snakecase
             env.filters['camelCase'] = stringcase.camelcase
@@ -87,7 +84,7 @@ class Templator(object):
         output_file = os.path.join(self.output_dir, output_filename)
         template = self._get_jinja2_environment().get_template(template_name)
         rendered = template.render(kwargs)
-        with open(output_file, "w") as fp:
+        with WriteIfChangedFile(output_file) as fp:
             fp.write(rendered)
         self.generated_files.append(output_filename)
         return output_filename
@@ -97,24 +94,10 @@ class MarkdownTemplator(Templator):
 
     def __init__(self, output_dir=None):
         super().__init__(output_dir)
-        self.add_filter('bold', self._bold)
-        self.add_filter('italics', self._italics)
+        self.add_filter('bold', stringmanip.bold)
+        self.add_filter('italics', stringmanip.italics)
         self.add_filter('mdindent', self._indent)
         self.add_filter('blockqutoe', self._blockQuote)
-
-    @staticmethod
-    def _bold(s: str):
-        if s and s is not None and s != 'None' and len(s) > 0:
-            return "**%s**" % (s)
-        else:
-            return ''
-
-    @staticmethod
-    def _italics(s: str):
-        if s and s is not None and s != 'None' and len(s) > 0:
-            return "_%s_" % (s)
-        else:
-            return ''
 
     @staticmethod
     def _indent(s: str, width: int):
