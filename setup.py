@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from jacobsjinjatoo import _version
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -7,7 +8,7 @@ with open("requirements.txt", "r") as fp:
     requirements = fp.read().split('\n')
 
 setup(name='jacobs-jinja-too',
-      version='0.0.1',
+      version=_version.__version__,
       url='http://github.com/pearmaster/jacobs-jinja-too',
       author='Jacob Brunson',
       author_email='pypi@jacobbrunson.com',
