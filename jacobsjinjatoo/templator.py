@@ -61,7 +61,7 @@ class Templator(object):
 
         if force or self._jinja2_environment is None:
             loader = jinja2.ChoiceLoader(self.loaders)
-            env = jinja2.Environment(loader=loader)
+            env = jinja2.Environment(loader=loader, extensions=['jinja2.ext.do'])
             env.filters['UpperCamelCase'] = stringmanip.upper_camel_case
             env.filters['PascalCase'] = stringmanip.upper_camel_case
             env.filters['CONST_CASE'] = lambda s : stringcase.constcase(str(s))
@@ -139,7 +139,7 @@ class CodeTemplator(MarkdownTemplator):
     def _privatize(cls, s: str):
         return cls._add_leading_underscore(stringcase.camelcase(s))
 
-    @classmethod
+    @staticmethod
     def _doxygenify(s: str):
         """ Translates a markdown string for use as a doxygen description.
         """
