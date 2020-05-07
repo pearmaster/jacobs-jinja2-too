@@ -1,6 +1,16 @@
 # Jacob's Jinja Too
 
-A simple wrapper around Jinja2 templatung with a collection of custom filters.
+A simple wrapper around Jinja2 templating with a collection of custom filters.  [Jinja2](https://jinja.palletsprojects.com/en/2.11.x/) is a templating language for Python.
+
+Only tested with Python3.7.
+
+The main purpose for this project is for depencency management as this diagram shows:
+
+```plantuml
+[Top Level Project] --> [jacobs-jinja-too] : uses
+[Top Level Project] --> [Another Project]  : depends
+[Another Project] --> [jacobs-jinja-too]   : uses
+```
 
 ## Installation
 
