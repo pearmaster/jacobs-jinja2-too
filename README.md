@@ -34,3 +34,6 @@ t.render_template('foo.jinja2', output_name='foo.txt', **params)
 ## License 
 
 GPLv2
+
+There is no copyright claim or ownership of any content created by jacobs-jinja-too. 
+
