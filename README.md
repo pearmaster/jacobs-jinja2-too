@@ -1,5 +1,7 @@
 # Jacob's Jinja Too
 
+[![CircleCI](https://circleci.com/gh/pearmaster/jacobs-jinja-too/tree/master.svg?style=shield)](https://circleci.com/gh/pearmaster/jacobs-jinja-too/tree/master)
+
 A simple wrapper around Jinja2 templating with a collection of custom filters.  [Jinja2](https://jinja.palletsprojects.com/en/2.11.x/) is a templating language for Python.
 
 Only tested with Python3.7.
