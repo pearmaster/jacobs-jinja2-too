@@ -26,11 +26,13 @@ workflows:
   build_test_publish:
     jobs:
       - test_pypi_publish:
+          context: python_twine
           filters:
             branches:
               only:
                 - develop
       - pypi_publish:
+          context: python_twine
           filters:
             branches:
               only:
