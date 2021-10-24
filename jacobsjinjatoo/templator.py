@@ -2,19 +2,21 @@ import os
 import jinja2
 import stringcase
 import re
+from typing import Union
 from . import stringmanip
 from .filewriter import WriteIfChangedFile
 
 class Templator(object):
+    USE_FULL_PATHS=1
 
-    def __init__(self, output_dir=None):
-        self.output_dir = output_dir or '.'
+    def __init__(self, output_dir:Union[str, int]=USE_FULL_PATHS):
+        self.output_dir = output_dir
         self.generated_files = []
         self._jinja2_environment = None
         self.loaders = []
         self.filters = {}
 
-    def set_output_dir(self, output_dir):
+    def set_output_dir(self, output_dir:Union[str,int]):
         self.output_dir = output_dir
         return self
 
@@ -80,8 +82,12 @@ class Templator(object):
         return self._jinja2_environment
 
     def render_template(self, template_name, output_name = None, **kwargs):
-        output_filename = output_name or ".".join(template_name.split(".")[:-1])
-        output_file = os.path.join(self.output_dir, output_filename)
+        if isinstance(self.output_dir, str):
+            output_filename = output_name or ".".join(template_name.split(".")[:-1])
+            output_file = os.path.join(self.output_dir, output_filename)
+        else:
+            output_filename = os.path.basename(output_name)
+            output_file = output_name
         template = self._get_jinja2_environment().get_template(template_name)
         rendered = template.render(kwargs)
         with WriteIfChangedFile(output_file) as fp:
@@ -92,7 +98,7 @@ class Templator(object):
 
 class MarkdownTemplator(Templator):
 
-    def __init__(self, output_dir=None):
+    def __init__(self, output_dir:Union[str,int]=Templator.USE_FULL_PATHS):
         super().__init__(output_dir)
         self.add_filter('bold', stringmanip.bold)
         self.add_filter('italics', stringmanip.italics)
@@ -123,7 +129,7 @@ class CodeTemplator(MarkdownTemplator):
     """Since most code can use markdown in documentation blocks, we inherit from MarkdownTemplator.
     """
 
-    def __init__(self, output_dir=None):
+    def __init__(self, output_dir:Union[str,int]=Templator.USE_FULL_PATHS):
         super().__init__(output_dir)
         self.add_filter('enumify', self._enumify)
         self.add_filter('privatize', self._privatize)
