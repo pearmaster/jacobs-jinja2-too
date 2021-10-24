@@ -31,8 +31,6 @@ workflows:
               only:
                 - develop
       - pypi_publish:
-          requires:
-            - test_pypi_publish
           filters:
             branches:
               only:
