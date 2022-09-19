@@ -66,7 +66,7 @@ class Templator(object):
             env = jinja2.Environment(loader=loader, extensions=['jinja2.ext.do'])
             env.filters['UpperCamelCase'] = stringmanip.upper_camel_case
             env.filters['PascalCase'] = stringmanip.upper_camel_case
-            env.filters['CONST_CASE'] = lambda s : stringcase.constcase(str(s))
+            env.filters['CONST_CASE'] = lambda s : stringcase.constcase(str(s)).replace('__', _)
             env.filters['snake_case'] = stringcase.snakecase
             env.filters['camelCase'] = stringcase.camelcase
             env.filters['type'] = type # For debug
