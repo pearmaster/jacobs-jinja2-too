@@ -2,7 +2,7 @@ import os
 import jinja2
 import stringcase
 import re
-from typing import Union
+from typing import Union, List, Dict, Callable
 from . import stringmanip
 from .filewriter import WriteIfChangedFile
 
@@ -11,10 +11,10 @@ class Templator(object):
 
     def __init__(self, output_dir:Union[str, int]=USE_FULL_PATHS):
         self.output_dir = output_dir
-        self.generated_files = []
+        self.generated_files: List[str] = []
         self._jinja2_environment = None
-        self.loaders = []
-        self.filters = {}
+        self.loaders: List[jinja2.loaders.BaseLoader] = []
+        self.filters: Dict[str, Callable[[str], str]] = dict()
 
     def set_output_dir(self, output_dir:Union[str,int]):
         self.output_dir = output_dir
@@ -66,7 +66,7 @@ class Templator(object):
             env = jinja2.Environment(loader=loader, extensions=['jinja2.ext.do'])
             env.filters['UpperCamelCase'] = stringmanip.upper_camel_case
             env.filters['PascalCase'] = stringmanip.upper_camel_case
-            env.filters['CONST_CASE'] = lambda s : stringcase.constcase(str(s)).replace('__', _)
+            env.filters['CONST_CASE'] = lambda s : stringcase.constcase(str(s)).replace('__', '_')
             env.filters['snake_case'] = stringcase.snakecase
             env.filters['camelCase'] = stringcase.camelcase
             env.filters['type'] = type # For debug
